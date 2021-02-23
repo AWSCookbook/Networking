@@ -1,0 +1,69 @@
+{
+    "Comment": "awscookbook template",
+    "CacheBehaviors": {
+        "Quantity": 0
+    },
+    "Logging": {
+        "Bucket": null,
+        "Prefix": null,
+        "Enabled": false,
+        "IncludeCookies": false
+    },
+    "DefaultRootObject": "index.html",
+    "Origins": {
+        "Items": [
+            {
+                "S3OriginConfig": {
+                    "OriginAccessIdentity": "origin-access-identity/cloudfront/CLOUDFRONT_OAI"
+                },
+                "Id": "S3-origin",
+                "DomainName": "S3_BUCKET_NAME.s3.amazonaws.com"
+            }
+        ],
+        "Quantity": 1
+    },
+    "PriceClass": "PriceClass_All",
+    "Enabled": true,
+    "DefaultCacheBehavior": {
+        "TrustedSigners": {
+            "Enabled": false,
+            "Quantity": 0
+        },
+        "TargetOriginId": "S3-origin",
+        "ViewerProtocolPolicy": "allow-all",
+        "ForwardedValues": {
+            "Headers": {
+                "Quantity": 0
+            },
+            "Cookies": {
+                "Forward": "none"
+            },
+            "QueryString": false
+        },
+        "SmoothStreaming": false,
+        "AllowedMethods": {
+            "Items": [
+                "GET",
+                "HEAD"
+            ],
+            "Quantity": 2
+        },
+        "MinTTL": 0
+    },
+    "CallerReference": "example",
+    "ViewerCertificate": {
+        "CloudFrontDefaultCertificate": true
+    },
+    "CustomErrorResponses": {
+        "Quantity": 0
+    },
+    "Restrictions": {
+        "GeoRestriction": {
+            "RestrictionType": "none",
+            "Quantity": 0
+        }
+    },
+    "Aliases": {
+        "Quantity": 0
+    }
+}

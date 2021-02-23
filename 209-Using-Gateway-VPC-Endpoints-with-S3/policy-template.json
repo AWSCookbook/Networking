@@ -1,0 +1,16 @@
+{
+  "Statement": [
+    {
+      "Sid": "RestrictToOneBucket",
+      "Principal": "*",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:s3:::S3BucketName",
+                    "arn:aws:s3:::S3BucketName/*"]
+    }
+  ]
+}
+  
