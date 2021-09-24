@@ -1,13 +1,15 @@
+from constructs import Construct
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_iam as iam,
-    core,
+    Stack,
+    CfnOutput,
 )
 
 
-class CdkAwsCookbook210Stack(core.Stack):
+class CdkAwsCookbook210Stack(Stack):
 
-    def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         attachments_subnets = ec2.SubnetConfiguration(
@@ -214,144 +216,144 @@ class CdkAwsCookbook210Stack(core.Stack):
 
         # outputs
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC1Id',
+            'VpcId1',
             value=vpc1.vpc_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC2Id',
+            'VpcId2',
             value=vpc2.vpc_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC3Id',
+            'VpcId3',
             value=vpc3.vpc_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'Instance1Id',
+            'InstanceId1',
             value=instance1.instance_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'Instance2Id',
+            'InstanceId2',
             value=instance2.instance_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'Instance3Id',
+            'InstanceId3',
             value=instance3.instance_id
         )
 
         vpc1_attachment_subnets = vpc1.select_subnets(subnet_group_name="ATTACHMENTS")
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC1Subnets',
+            'AttachmentSubnetsVpc1',
             value=', '.join(map(str, vpc1_attachment_subnets.subnet_ids))
         )
 
         vpc2_attachment_subnets = vpc2.select_subnets(subnet_group_name="ATTACHMENTS")
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC2Subnets',
+            'AttachmentSubnetsVpc2',
             value=', '.join(map(str, vpc2_attachment_subnets.subnet_ids))
         )
 
         vpc3_attachment_subnets = vpc3.select_subnets(subnet_group_name="ATTACHMENTS")
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC3Subnets',
+            'AttachmentSubnetsVpc3',
             value=', '.join(map(str, vpc3_attachment_subnets.subnet_ids))
         )
 
         vpc1_isolated_subnets_list = vpc1.select_subnets(subnet_type=ec2.SubnetType.ISOLATED)
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC1Rt1Id',
+            'Vpc1RtId1',
             value=vpc1_isolated_subnets_list.subnets[0].route_table.route_table_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC1Rt2Id',
+            'Vpc1RtId2',
             value=vpc1_isolated_subnets_list.subnets[1].route_table.route_table_id
         )
 
         vpc2_public_subnets_list = vpc2.select_subnets(subnet_type=ec2.SubnetType.PUBLIC)
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC2PublicSubnet1Id',
+            'Vpc2PublicSubnetId1',
             value=vpc2_public_subnets_list.subnets[0].subnet_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC2PublicSubnet2Id',
+            'Vpc2PublicSubnetId2',
             value=vpc2_public_subnets_list.subnets[1].subnet_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC2PublicRt1Id',
+            'Vpc2PublicRtId1',
             value=vpc2_public_subnets_list.subnets[0].route_table.route_table_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC2PublicRt2Id',
+            'Vpc2PublicRtId2',
             value=vpc2_public_subnets_list.subnets[1].route_table.route_table_id
         )
 
         vpc2_isolated_subnets_list = vpc2.select_subnets(subnet_type=ec2.SubnetType.PRIVATE)
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC2Rt1Id',
+            'Vpc2RtId1',
             value=vpc2_isolated_subnets_list.subnets[0].route_table.route_table_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC2Rt2Id',
+            'Vpc2RtId2',
             value=vpc2_isolated_subnets_list.subnets[1].route_table.route_table_id
         )
 
         vpc3_isolated_subnets_list = vpc3.select_subnets(subnet_type=ec2.SubnetType.ISOLATED)
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC3Rt1Id',
+            'Vpc3RtId1',
             value=vpc3_isolated_subnets_list.subnets[0].route_table.route_table_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC3Rt2Id',
+            'Vpc3RtId2',
             value=vpc3_isolated_subnets_list.subnets[1].route_table.route_table_id
         )
 
         vpc2_attachment_subnets_list = vpc2.select_subnets(subnet_group_name="ATTACHMENTS")
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC2AttachRt1Id',
+            'Vpc2AttachRtId1',
             value=vpc2_attachment_subnets_list.subnets[0].route_table.route_table_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPC2AttachRt2Id',
+            'Vpc2AttachRtId2',
             value=vpc2_attachment_subnets_list.subnets[1].route_table.route_table_id
         )

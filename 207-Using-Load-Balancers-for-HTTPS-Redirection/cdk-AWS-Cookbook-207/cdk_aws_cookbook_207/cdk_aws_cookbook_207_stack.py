@@ -1,20 +1,33 @@
+from constructs import Construct
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_ecs as ecs,
-    core,
+    Stack,
+    CfnOutput,
 )
 
 
-class CdkAwsCookbook207Stack(core.Stack):
+class CdkAwsCookbook207Stack(Stack):
 
-    def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+
+        public_subnets = ec2.SubnetConfiguration(
+                name="Public",
+                subnet_type=ec2.SubnetType.PUBLIC,
+                cidr_mask=24)
+
+        private_subnets = ec2.SubnetConfiguration(
+                name="Tier2",
+                subnet_type=ec2.SubnetType.PRIVATE,
+                cidr_mask=24)
 
         # create VPC
         vpc = ec2.Vpc(
             self,
             'AWS-Cookbook-VPC',
-            cidr='10.10.0.0/21',
+            cidr='10.10.0.0/22',
+            subnet_configuration=[public_subnets, private_subnets]
         )
 
         fargate_service_security_group = ec2.SecurityGroup(
@@ -65,7 +78,7 @@ class CdkAwsCookbook207Stack(core.Stack):
             max_healthy_percent=100,
             min_healthy_percent=0,
             platform_version=ecs.FargatePlatformVersion('LATEST'),
-            security_group=fargate_service_security_group,
+            security_groups=[fargate_service_security_group],
             service_name='awscookbook207Service',
             vpc_subnets=ec2.SubnetSelection(
                 one_per_az=False,
@@ -75,27 +88,27 @@ class CdkAwsCookbook207Stack(core.Stack):
 
         # outputs
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPCId',
+            'VpcId',
             value=vpc.vpc_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'ECSClusterName',
+            'EcsClusterName',
             value=ecs_cluster.cluster_name
         )
 
         public_subnets = vpc.select_subnets(subnet_type=ec2.SubnetType.PUBLIC)
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPCPublicSubnets',
+            'VpcPublicSubnets',
             value=', '.join(map(str, public_subnets.subnet_ids))
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
             'AppSgId',
             value=fargate_service_security_group.security_group_id

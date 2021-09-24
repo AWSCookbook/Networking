@@ -1,18 +1,19 @@
+from constructs import Construct
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_iam as iam,
-    core
+    Stack,
+    CfnOutput,
 )
 
+class CdkAwsCookbook208Stack(Stack):
 
-class CdkAwsCookbook208Stack(core.Stack):
-
-    def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        isolated_subnets = ec2.SubnetConfiguration(
-                name="Isolated",
-                subnet_type=ec2.SubnetType.ISOLATED,
+        public_subnets = ec2.SubnetConfiguration(
+                name="Public",
+                subnet_type=ec2.SubnetType.PUBLIC,
                 cidr_mask=24)
 
         # create VPC
@@ -20,40 +21,10 @@ class CdkAwsCookbook208Stack(core.Stack):
             self,
             'AWS-Cookbook-VPC',
             cidr='10.10.0.0/23',
-            subnet_configuration=[isolated_subnets]
+            subnet_configuration=[public_subnets]
         )
 
         # -------- Begin EC2 Helper ---------
-        vpc.add_interface_endpoint(
-            'VPCSSMInterfaceEndpoint',
-            service=ec2.InterfaceVpcEndpointAwsService('ssm'),  # Find names with - aws ec2 describe-vpc-endpoint-services | jq '.ServiceNames'
-            private_dns_enabled=True,
-            subnets=ec2.SubnetSelection(
-                one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
-            ),
-        )
-
-        vpc.add_interface_endpoint(
-            'VPCEC2MessagesInterfaceEndpoint',
-            service=ec2.InterfaceVpcEndpointAwsService('ec2messages'),  # Find names with - aws ec2 describe-vpc-endpoint-services | jq '.ServiceNames'
-            private_dns_enabled=True,
-            subnets=ec2.SubnetSelection(
-                one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
-            ),
-        )
-
-        vpc.add_interface_endpoint(
-            'VPCSSMMessagesInterfaceEndpoint',
-            service=ec2.InterfaceVpcEndpointAwsService('ssmmessages'),  # Find names with - aws ec2 describe-vpc-endpoint-services | jq '.ServiceNames'
-            private_dns_enabled=True,
-            subnets=ec2.SubnetSelection(
-                one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
-            ),
-        )
-
         ami = ec2.MachineImage.latest_amazon_linux(
             generation=ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
             edition=ec2.AmazonLinuxEdition.STANDARD,
@@ -61,72 +32,77 @@ class CdkAwsCookbook208Stack(core.Stack):
             storage=ec2.AmazonLinuxStorage.GENERAL_PURPOSE
         )
 
+        user_data = ec2.UserData.for_linux()
+        user_data.add_commands('sudo yum -y update',
+                               'sudo yum install -y httpd',
+                               'sudo systemctl start httpd')
+
         iam_role = iam.Role(self, "InstanceSSM", assumed_by=iam.ServicePrincipal("ec2.amazonaws.com"))
 
         iam_role.add_managed_policy(iam.ManagedPolicy.from_aws_managed_policy_name("service-role/AmazonEC2RoleforSSM"))
 
-        instance = ec2.Instance(
+        instance1 = ec2.Instance(
             self,
-            "Instance",
+            "Instance1",
             instance_type=ec2.InstanceType("t3.nano"),
             machine_image=ami,
-            allow_all_outbound=False,
+            user_data=user_data,
+            allow_all_outbound=True,
             role=iam_role,
             vpc=vpc,
         )
 
-        ssm_endpoint.connections.allow_from(
-            instance.connections, ec2.Port.tcp(443), "Ingress"
-        )
+        #user_data_2_commands = ec2.UserData.for_linux()
+        #user_data_2_commands.add_commands("#!/bin/sh")
+        #user_data_2_commands.add_commands("yum install httpd -y")
+        #user_data_2_commands.add_commands("service httpd start")
+        #user_data_2_commands.add_commands("echo \"<html><h1>AWSCookbook App 2 running on $(hostname -f)</h1></html>\" > /var/www/html/index.html")
 
-        ssmmessages_endpoint.connections.allow_from(
-            instance.connections, ec2.Port.tcp(443), "Ingress"
-        )
-
-        ec2messages_endpoint.connections.allow_from(
-            instance.connections, ec2.Port.tcp(443), "Ingress"
-        )
-
-        instance.connections.allow_to(
-            ssm_endpoint.connections, ec2.Port.tcp(443), "Egress"
-        )
-
-        instance.connections.allow_to(
-            ssmmessages_endpoint.connections, ec2.Port.tcp(443), "Egress"
-        )
-
-        instance.connections.allow_to(
-            ec2messages_endpoint.connections, ec2.Port.tcp(443), "Egress"
-        )
-
-        # -------- End EC2 Helper ---------
-        # outputs
-
-        core.CfnOutput(
+        instance2 = ec2.Instance(
             self,
-            'InstanceID',
-            value=instance.instance_id
+            "Instance2",
+            instance_type=ec2.InstanceType("t3.nano"),
+            machine_image=ami,
+            user_data=user_data,
+            allow_all_outbound=True,
+            role=iam_role,
+            vpc=vpc,
         )
-        # -------- End EC2 Helper ---------
 
         # outputs
 
-        isolated_subnet_list = vpc.select_subnets(subnet_type=ec2.SubnetType.ISOLATED)
-
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'Sub1RouteTableID',
-            value=isolated_subnet_list.subnets[0].route_table.route_table_id
+            'InstanceId1',
+            value=instance1.instance_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'InstanceId',
-            value=instance.instance_id
+            'InstanceId2',
+            value=instance2.instance_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'InstanceSG',
-            value=instance.connections.security_groups[0].security_group_id
+            'InstanceSg1',
+            value=instance1.connections.security_groups[0].security_group_id
+        )
+
+        CfnOutput(
+            self,
+            'InstanceSg2',
+            value=instance2.connections.security_groups[0].security_group_id
+        )
+
+        CfnOutput(
+            self,
+            'InstanceIp1',
+            value=instance1.instance_public_ip
+        )
+
+        CfnOutput(
+            self,
+            'InstanceIp2',
+            value=instance2.instance_public_ip
         )

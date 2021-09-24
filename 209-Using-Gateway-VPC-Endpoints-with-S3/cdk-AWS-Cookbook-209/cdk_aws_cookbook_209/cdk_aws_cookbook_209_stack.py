@@ -1,22 +1,25 @@
+from constructs import Construct
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_s3 as s3,
     aws_s3_deployment,
     aws_iam as iam,
-    core,
+    Stack,
+    CfnOutput,
+    RemovalPolicy
 )
 
 
-class CdkAwsCookbook209Stack(core.Stack):
+class CdkAwsCookbook209Stack(Stack):
 
-    def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         # create s3 bucket
         s3_Bucket = s3.Bucket(
             self,
             "AWS-Cookbook-Recipe209",
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=RemovalPolicy.DESTROY
         )
 
         aws_s3_deployment.BucketDeployment(
@@ -98,13 +101,13 @@ class CdkAwsCookbook209Stack(core.Stack):
 
         # outputs
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPCId',
+            'VpcId',
             value=vpc.vpc_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
             'InstanceId',
             value=instance.instance_id
@@ -112,20 +115,20 @@ class CdkAwsCookbook209Stack(core.Stack):
 
         isolated_subnets_list = vpc.select_subnets(subnet_type=ec2.SubnetType.ISOLATED)
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'Rt1Id',
+            'RtId1',
             value=isolated_subnets_list.subnets[0].route_table.route_table_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'Rt2Id',
+            'RtId2',
             value=isolated_subnets_list.subnets[1].route_table.route_table_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'S3BucketName',
+            'BucketName',
             value=s3_Bucket.bucket_name
         )

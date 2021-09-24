@@ -19,7 +19,8 @@ setuptools.setup(
     packages=setuptools.find_packages(where="cdk_aws_cookbook_207"),
 
     install_requires=[
-        "aws-cdk.core==1.80.0",
+        "aws-cdk-lib>=2.0.0rc1",
+        "constructs>=10.0.0",
     ],
 
     python_requires=">=3.6",

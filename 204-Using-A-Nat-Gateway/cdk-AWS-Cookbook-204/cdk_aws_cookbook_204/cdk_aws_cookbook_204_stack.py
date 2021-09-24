@@ -1,13 +1,14 @@
+from constructs import Construct
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_iam as iam,
-    core,
+    Stack,
+    CfnOutput,
 )
 
+class CdkAwsCookbook204Stack(Stack):
 
-class CdkAwsCookbook204Stack(core.Stack):
-
-    def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         public_subnets = ec2.SubnetConfiguration(
@@ -97,43 +98,43 @@ class CdkAwsCookbook204Stack(core.Stack):
             )
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'Instance1ID',
+            'InstanceId1',
             value=instance1.instance_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'Instance2ID',
+            'InstanceId2',
             value=instance2.instance_id
         )
         # -------- End EC2 Helper ---------
 
         # outputs
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPCId',
+            'VpcId',
             value=vpc.vpc_id
         )
 
         public_subnets = vpc.select_subnets(subnet_type=ec2.SubnetType.PUBLIC)
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPCPublicSubnet1',
+            'VpcPublicSubnet1',
             value=public_subnets.subnets[0].subnet_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'PrivateRTId1',
+            'PrivateRtId1',
             value=tier2_subnet_list.subnets[0].route_table.route_table_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'PrivateRTId2',
+            'PrivateRtId2',
             value=tier2_subnet_list.subnets[1].route_table.route_table_id
         )

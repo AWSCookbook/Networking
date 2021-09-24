@@ -1,13 +1,15 @@
+from constructs import Construct
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_iam as iam,
-    core,
+    Stack,
+    CfnOutput,
 )
 
 
-class CdkAwsCookbook203Stack(core.Stack):
+class CdkAwsCookbook203Stack(Stack):
 
-    def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         tier1_subnets = ec2.SubnetConfiguration(
@@ -74,31 +76,31 @@ class CdkAwsCookbook203Stack(core.Stack):
             vpc=vpc,
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'InstanceID',
+            'InstanceId',
             value=instance.instance_id
         )
         # -------- End EC2 Helper ---------
 
         # outputs
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'VPCId',
+            'VpcId',
             value=vpc.vpc_id
         )
 
         tier1_subnet_list = vpc.select_subnets(subnet_group_name="Tier1")
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'RouteTable1ID',
+            'RouteTableId1',
             value=tier1_subnet_list.subnets[0].route_table.route_table_id
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
-            'RouteTable2ID',
-            value=tier1_subnet_list.subnets[0].route_table.route_table_id
+            'RouteTableId2',
+            value=tier1_subnet_list.subnets[1].route_table.route_table_id
         )
