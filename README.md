@@ -1,4 +1,4 @@
-# Chapter 2
+# Chapter 2 - Networking
 ## Set and export your default region:
 
 `export AWS_REGION=us-east-1`
