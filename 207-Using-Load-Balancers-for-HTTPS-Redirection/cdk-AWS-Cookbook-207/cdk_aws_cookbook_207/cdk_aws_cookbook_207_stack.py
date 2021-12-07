@@ -72,7 +72,7 @@ class CdkAwsCookbook207Stack(Stack):
             cluster=ecs_cluster,
             task_definition=FargateTask,
             assign_public_ip=False,
-            desired_count=2,
+            desired_count=1,
             enable_ecs_managed_tags=False,
             # health_check_grace_period=core.Duration.seconds(60),
             max_healthy_percent=100,
@@ -111,5 +111,11 @@ class CdkAwsCookbook207Stack(Stack):
         CfnOutput(
             self,
             'AppSgId',
+            value=fargate_service_security_group.security_group_id
+        )
+
+        CfnOutput(
+            self,
+            'ContainerIp',
             value=fargate_service_security_group.security_group_id
         )

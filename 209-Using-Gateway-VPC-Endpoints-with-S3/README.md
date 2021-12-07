@@ -4,7 +4,7 @@
 
 ### In the root of the Chapter 2 repo cd to the “209-Using-Gateway-VPC-Endpoints-with-S3/cdk-AWS-Cookbook-209” directory and follow the subsequent steps: 
 
-```
+```shell
 cd 209-Using-Gateway-VPC-Endpoints-with-S3/cdk-AWS-Cookbook-209/
 test -d .venv || python3 -m venv .venv
 source .venv/bin/activate
@@ -17,7 +17,9 @@ cdk deploy
 
 ### We created a helper.py script to let you easily create and export environment variables to make subsequent commands easier. Run the script, and copy the output to your terminal to export variables:
 
-`python helper.py`
+```
+python helper.py
+```
 
 ### Navigate up to the main directory for this recipe (out of the “cdk-AWS-Cookbook-209” directory):
 
@@ -26,9 +28,6 @@ cdk deploy
 
 
 ## Clean up 
-### Delete the SSM Parameter that you created:
-
-`aws ssm delete-parameter --name "Cookbook209S3Bucket"`
 
 ### Delete the VPC Endpoint:
 
