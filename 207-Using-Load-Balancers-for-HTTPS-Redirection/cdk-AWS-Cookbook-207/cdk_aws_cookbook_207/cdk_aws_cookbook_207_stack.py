@@ -19,7 +19,7 @@ class CdkAwsCookbook207Stack(Stack):
 
         private_subnets = ec2.SubnetConfiguration(
                 name="Tier2",
-                subnet_type=ec2.SubnetType.PRIVATE,
+                subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT,
                 cidr_mask=24)
 
         # create VPC
@@ -82,7 +82,7 @@ class CdkAwsCookbook207Stack(Stack):
             service_name='awscookbook207Service',
             vpc_subnets=ec2.SubnetSelection(
                 one_per_az=False,
-                subnet_type=ec2.SubnetType('PRIVATE')
+                subnet_type=ec2.SubnetType('PRIVATE_WITH_NAT')
             )
         )
 
