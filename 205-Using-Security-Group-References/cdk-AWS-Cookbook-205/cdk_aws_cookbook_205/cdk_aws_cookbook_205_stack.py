@@ -14,7 +14,7 @@ class CdkAwsCookbook205Stack(Stack):
 
         isolated_subnets = ec2.SubnetConfiguration(
             name="Public",
-            subnet_type=ec2.SubnetType.ISOLATED,
+            subnet_type=ec2.SubnetType.PRIVATE_ISOLATED,
             cidr_mask=24
         )
 
@@ -33,7 +33,7 @@ class CdkAwsCookbook205Stack(Stack):
             private_dns_enabled=True,
             subnets=ec2.SubnetSelection(
                 one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
             ),
         )
 
@@ -43,7 +43,7 @@ class CdkAwsCookbook205Stack(Stack):
             private_dns_enabled=True,
             subnets=ec2.SubnetSelection(
                 one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
             ),
         )
 
@@ -53,7 +53,7 @@ class CdkAwsCookbook205Stack(Stack):
             private_dns_enabled=True,
             subnets=ec2.SubnetSelection(
                 one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
             ),
         )
 
@@ -71,7 +71,7 @@ class CdkAwsCookbook205Stack(Stack):
         vpc.add_gateway_endpoint(
             's3GateWayEndPoint',
             service=ec2.GatewayVpcEndpointAwsService('s3'),
-            subnets=[ec2.SubnetSelection(subnet_type=ec2.SubnetType.ISOLATED)],
+            subnets=[ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE_ISOLATED)],
         )
 
         # -------- End EC2 Helper ---------
@@ -114,7 +114,7 @@ class CdkAwsCookbook205Stack(Stack):
             value=instance1.instance_id
         )
 
-        isolated_subnets = vpc.select_subnets(subnet_type=ec2.SubnetType.ISOLATED)
+        isolated_subnets = vpc.select_subnets(subnet_type=ec2.SubnetType.PRIVATE_ISOLATED)
 
         CfnOutput(
             self,
