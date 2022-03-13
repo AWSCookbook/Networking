@@ -32,7 +32,7 @@ class CdkAwsCookbook209Stack(Stack):
 
         isolated_subnets = ec2.SubnetConfiguration(
                 name="ISOLATED",
-                subnet_type=ec2.SubnetType.ISOLATED,
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED,
                 cidr_mask=24)
 
         # create VPC
@@ -49,7 +49,7 @@ class CdkAwsCookbook209Stack(Stack):
             private_dns_enabled=True,
             subnets=ec2.SubnetSelection(
                 one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
             ),
         )
 
@@ -59,7 +59,7 @@ class CdkAwsCookbook209Stack(Stack):
             private_dns_enabled=True,
             subnets=ec2.SubnetSelection(
                 one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
             ),
         )
         vpc.add_interface_endpoint(
@@ -68,7 +68,7 @@ class CdkAwsCookbook209Stack(Stack):
             private_dns_enabled=True,
             subnets=ec2.SubnetSelection(
                 one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
             ),
         )
 
@@ -113,7 +113,7 @@ class CdkAwsCookbook209Stack(Stack):
             value=instance.instance_id
         )
 
-        isolated_subnets_list = vpc.select_subnets(subnet_type=ec2.SubnetType.ISOLATED)
+        isolated_subnets_list = vpc.select_subnets(subnet_type=ec2.SubnetType.PRIVATE_ISOLATED)
 
         CfnOutput(
             self,
