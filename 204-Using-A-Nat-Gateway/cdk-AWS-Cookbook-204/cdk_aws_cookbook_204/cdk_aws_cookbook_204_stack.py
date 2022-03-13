@@ -18,7 +18,7 @@ class CdkAwsCookbook204Stack(Stack):
 
         tier2_subnets = ec2.SubnetConfiguration(
                 name="Tier2",
-                subnet_type=ec2.SubnetType.ISOLATED,
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED,
                 cidr_mask=24)
 
         # create VPC
@@ -39,7 +39,7 @@ class CdkAwsCookbook204Stack(Stack):
             private_dns_enabled=True,
             subnets=ec2.SubnetSelection(
                 one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
             ),
         )
 
@@ -49,7 +49,7 @@ class CdkAwsCookbook204Stack(Stack):
             private_dns_enabled=True,
             subnets=ec2.SubnetSelection(
                 one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
             ),
         )
 
@@ -59,7 +59,7 @@ class CdkAwsCookbook204Stack(Stack):
             private_dns_enabled=True,
             subnets=ec2.SubnetSelection(
                 one_per_az=False,
-                subnet_type=ec2.SubnetType.ISOLATED
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
             ),
         )
 
