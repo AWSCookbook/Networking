@@ -192,7 +192,9 @@ aws ec2 delete-network-insights-path \
 
 ### To clean up the environment variables, run the helper.py script in this recipe’s cdk- directory with the --unset flag, and copy the output to your terminal to export variables:
 
-`python helper.py --unset`
+```
+python helper.py --unset
+```
 
 ### Unset the environment variable that you created manually:
 
@@ -204,7 +206,9 @@ unset ANALYSIS_ID_2
 
 ### Use the AWS CDK to destroy the resources, deactivate your Python virtual environment, and go to the root of the chapter:
 
-`cdk destroy && deactivate && rm -r .venv/ && cd ../..`
+```
+cdk destroy && deactivate && rm -r .venv/ && cd ../..
+```
 
 ## Discussion
 
